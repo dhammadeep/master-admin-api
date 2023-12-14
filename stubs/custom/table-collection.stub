@@ -1,0 +1,43 @@
+<?php
+
+namespace {{classNamespace}};
+
+use {{modelNamespace}};
+use App\Http\Resources\Common\PaginationResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use {{tableResourceNamespace}};
+
+class {{class}} extends ResourceCollection
+{
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return [
+            'columns' => {{model}}::getTableFields(),
+            'rows' => $this->collection->map(function ($data) {
+                return new {{model}}TableResponse($data);
+            })->all(),
+            'filters' => {{model}}::getFilterFields(),
+            'pagination' => new PaginationResource($this),
+            'actions' => [
+                [
+                    'name'=>'edit',
+                    'actionUrl'=>''
+                ],
+                [
+                    'name'=>'approve',
+                    'actionUrl'=>'geo/{{model}}/approve'
+                ],
+                [
+                    'name'=>'reject',
+                    'actionUrl'=>'geo/{{model}}/reject'
+                ]
+            ],
+        ];
+    }
+}
